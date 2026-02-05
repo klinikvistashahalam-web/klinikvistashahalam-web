@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klinik Vista - Admin Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Admin Login Modal Styles */
+        .admin-login-modal {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .admin-login-content {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close-login {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            color: #a0aec0;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-login:hover {
+            color: #2d3748;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-header h2 {
+            color: #2d3748;
+            font-size: 1.8rem;
+            margin: 1rem 0 0.5rem 0;
+        }
+
+        .login-header p {
+            color: #718096;
+            font-size: 0.95rem;
+        }
+
+        .login-form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .login-form-group label {
+            display: block;
+            color: #2d3748;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .login-form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .login-form-group input:focus {
+            outline: none;
+            border-color: #E91E63;
+            box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #E91E63 0%, #BA68C8 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(233, 30, 99, 0.3);
+        }
+
+        .error-message {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .success-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #48bb78;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 10000;
+            animation: slideInRight 0.3s ease;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Admin Panel Styles */
+        .promo-admin-modal {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .promo-admin-content {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 30px;
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow: auto;
+            position: relative;
+            animation: slideUp 0.5s ease;
+        }
+
+        .close-admin {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            color: #a0aec0;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-admin:hover {
+            color: #2d3748;
+        }
+
+        .logout-btn {
+            background: #fc8181;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #f56565;
+        }
+
+        /* Admin Tabs */
+        .admin-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .admin-tab {
+            padding: 10px 20px;
+            background: #f7fafc;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-weight: 600;
+            color: #4a5568;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .admin-tab:hover {
+            background: #e2e8f0;
+        }
+
+        .admin-tab.active {
+            background: linear-gradient(135deg, #E91E63 0%, #BA68C8 100%);
+            color: white;
+        }
+
+        .admin-tab-content {
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 20px 10px;
+        }
+
+        .admin-section {
+            display: none;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        .admin-section h3 {
+            color: #2d3748;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #E91E63;
+        }
+
+        .promo-form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 1.5rem;
+        }
+
+        .promo-form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .promo-form-group label {
+            color: #2d3748;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .promo-form-group input,
+        .promo-form-group select,
+        .promo-form-group textarea {
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .promo-form-group input:focus,
+        .promo-form-group select:focus,
+        .promo-form-group textarea:focus {
+            outline: none;
+            border-color: #E91E63;
+            box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+        }
+
+        .promo-edit-card {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            margin-bottom: 1.5rem;
+        }
+
+        .add-new-btn {
+            width: 100%;
+            padding: 12px;
+            background: #48bb78;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .add-new-btn:hover {
+            background: #38a169;
+        }
+
+        .save-promo-btn, .reset-promo-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .save-promo-btn {
+            background: #48bb78;
+            color: white;
+        }
+
+        .save-promo-btn:hover {
+            background: #38a169;
+        }
+
+        .reset-promo-btn {
+            background: #cbd5e0;
+            color: #2d3748;
+        }
+
+        .reset-promo-btn:hover {
+            background: #a0aec0;
+        }
+
+        .delete-item-btn {
+            padding: 8px 15px;
+            background: #fc8181;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .delete-item-btn:hover {
+            background: #f56565;
+        }
+
+        .admin-actions {
+            position: sticky;
+            bottom: 0;
+            background: white;
+            padding: 20px 0;
+            margin-top: 2rem;
+            border-top: 2px solid #e2e8f0;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 768px) {
+            .promo-admin-content {
+                width: 95%;
+                padding: 20px;
+            }
+            
+            .promo-form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-tabs {
+                gap: 5px;
+            }
+            
+            .admin-tab {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Login Modal -->
+    <div id="adminLoginModal" class="admin-login-modal">
+        <div class="admin-login-content">
+            <span class="close-login" onclick="closeAdminLogin()">&times;</span>
+            <div class="login-header">
+                <i class="fas fa-user-shield" style="font-size: 3rem; color: #E91E63;"></i>
+                <h2>🔐 Admin Login</h2>
+                <p style="color: #666;">Masukkan kelayakan admin untuk akses panel</p>
+            </div>
+            <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
+                <div class="login-form-group">
+                    <label><i class="fas fa-user"></i> Username</label>
+                    <input type="text" id="adminUsername" placeholder="Masukkan username" required>
+                </div>
+                <div class="login-form-group">
+                    <label><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="adminPassword" placeholder="Masukkan password" required>
+                </div>
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Log Masuk
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="promoAdminModal" class="promo-admin-modal" style="display: none;">
+        <div class="promo-admin-content">
+            <span class="close-admin" onclick="closePromoAdmin()">&times;</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <div>
+                    <h2 style="margin: 0;">🎯 Panel Admin Klinik Vista Shah Alam</h2>
+                    <p style="color: #666; margin: 0.5rem 0 0 0;">Selamat datang, <strong id="adminUserDisplay">Admin</strong>!</p>
+                </div>
+                <button onclick="adminLogout()" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Log Keluar
+                </button>
+            </div>
+            
+            <!-- Admin Tabs -->
+            <div class="admin-tabs">
+                <button class="admin-tab active" onclick="switchAdminTab('promosi')">🔥 Promosi</button>
+                <button class="admin-tab" onclick="switchAdminTab('services')">⚕️ Perkhidmatan</button>
+                <button class="admin-tab" onclick="switchAdminTab('detailed-services')">📋 Layanan Terperinci</button>
+                <button class="admin-tab" onclick="switchAdminTab('gallery')">🖼️ Galeri</button>
+                <button class="admin-tab" onclick="switchAdminTab('panel')">🏥 Panel Insurans</button>
+                <button class="admin-tab" onclick="switchAdminTab('contact')">📞 Maklumat</button>
+                <button class="admin-tab" onclick="switchAdminTab('settings')">⚙️ Tetapan</button>
+            </div>
+            
+            <!-- Tab Contents -->
+            <div id="adminTabContent" class="admin-tab-content">
+                <!-- Content will be loaded by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Admin Authentication System
+        const ADMIN_CREDENTIALS = {
+            username: localStorage.getItem('clinicAdminUser') || 'admin',
+            password: localStorage.getItem('clinicAdminPassword') || 'klinik2026'
+        };
+
+        let isAdminLoggedIn = sessionStorage.getItem('adminLoggedIn') === 'true';
+        let currentAdminUser = sessionStorage.getItem('adminUsername') || '';
+
+        // Show notification helper
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = 'success-notification';
+            notification.innerHTML = message;
+            if (type === 'error') {
+                notification.style.background = '#f56565';
+            }
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        // Close admin login modal
+        function closeAdminLogin() {
+            document.getElementById('adminLoginModal').style.display = 'none';
+            document.getElementById('adminLoginForm').reset();
+            const errorMsg = document.querySelector('.error-message');
+            if (errorMsg) errorMsg.remove();
+        }
+
+        // Handle admin login
+        function handleAdminLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+            
+            const oldError = document.querySelector('.error-message');
+            if (oldError) oldError.remove();
+            
+            if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+                isAdminLoggedIn = true;
+                currentAdminUser = username;
+                sessionStorage.setItem('adminLoggedIn', 'true');
+                sessionStorage.setItem('adminUsername', username);
+                
+                closeAdminLogin();
+                openPromoAdmin();
+                showNotification('✅ Login berjaya! Selamat datang, ' + username, 'success');
+            } else {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message';
+                errorDiv.innerHTML = '❌ Username atau password salah!';
+                document.getElementById('adminLoginForm').appendChild(errorDiv);
+            }
+        }
+
+        // Admin logout
+        function adminLogout() {
+            if (confirm('Adakah anda pasti mahu log keluar?')) {
+                isAdminLoggedIn = false;
+                currentAdminUser = '';
+                sessionStorage.removeItem('adminLoggedIn');
+                sessionStorage.removeItem('adminUsername');
+                
+                closePromoAdmin();
+                showNotification('👋 Anda telah log keluar', 'success');
+            }
+        }
+
+        // Change admin credentials
+        function changeAdminPassword() {
+            const currentUsername = prompt('Masukkan username semasa:');
+            const currentPassword = prompt('Masukkan password semasa:');
+            
+            if (currentUsername !== ADMIN_CREDENTIALS.username || currentPassword !== ADMIN_CREDENTIALS.password) {
+                alert('❌ Kelayakan semasa salah!');
+                return;
+            }
+            
+            const newUsername = prompt('Masukkan username baru:');
+            const newPassword = prompt('Masukkan password baru (minimum 6 karakter):');
+            
+            if (newUsername && newPassword && newPassword.length >= 6) {
+                localStorage.setItem('clinicAdminUser', newUsername);
+                localStorage.setItem('clinicAdminPassword', newPassword);
+                alert('✅ Kelayakan admin berjaya ditukar! Sila refresh page dan log masuk semula.');
+                adminLogout();
+                location.reload();
+            } else {
+                alert('❌ Username tidak boleh kosong dan password mesti sekurang-kurangnya 6 karakter.');
+            }
+        }
+
+        // Default promos data
+        const defaultPromos = [
+            {
+                badge: 'PROMOSI',
+                image: 'service-male-fertility.png',
+                title: 'Rawatan Kesuburan Lelaki',
+                description: 'Konsultasi pakar & rawatan lengkap',
+                oldPrice: '300',
+                newPrice: '250'
+            },
+            {
+                badge: 'TERHAD',
+                image: 'service-knee-injection.jpg',
+                title: 'Suntikan Lutut PRP',
+                description: 'Rawatan untuk sakit lutut & sendi',
+                oldPrice: '800',
+                newPrice: '680'
+            }
+        ];
+
+        // Load promos from localStorage
+        function loadPromos() {
+            const saved = localStorage.getItem('clinicPromos');
+            return saved ? JSON.parse(saved) : defaultPromos;
+        }
+
+        // Load site data
+        function loadSiteData() {
+            const saved = localStorage.getItem('clinicSiteData');
+            const defaultData = {
+                contact: {
+                    phone: '+60175456218',
+                    email: 'klinikvistashahalam@gmail.com',
+                    hours: 'Setiap Hari: 8 Pagi - 12 Tengah Malam',
+                    address: 'ALAM AVENUE, G-33, Jalan Serai Wangi L 16/L, Seksyen 16, 40200 Shah Alam, Selangor'
+                }
+            };
+            return saved ? JSON.parse(saved) : defaultData;
+        }
+
+        // Save site data
+        function saveSiteData(data) {
+            localStorage.setItem('clinicSiteData', JSON.stringify(data));
+        }
+
+        // Open admin panel
+        function openPromoAdmin() {
+            document.getElementById('adminLoginModal').style.display = 'none';
+            document.getElementById('promoAdminModal').style.display = 'flex';
+            document.getElementById('adminUserDisplay').textContent = currentAdminUser;
+            loadAdminTabContent('promosi');
+        }
+
+        // Close admin panel
+        function closePromoAdmin() {
+            document.getElementById('promoAdminModal').style.display = 'none';
+            document.getElementById('adminLoginModal').style.display = 'flex';
+        }
+
+        let currentAdminTab = 'promosi';
+
+        // Switch admin tabs
+        function switchAdminTab(tabName) {
+            currentAdminTab = tabName;
+            document.querySelectorAll('.admin-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            loadAdminTabContent(tabName);
+        }
+
+        // Load admin tab content
+        function loadAdminTabContent(tabName) {
+            const content = document.getElementById('adminTabContent');
+            
+            switch(tabName) {
+                case 'promosi':
+                    loadPromosiTab(content);
+                    break;
+                case 'services':
+                    loadServicesTab(content);
+                    break;
+                case 'detailed-services':
+                    loadDetailedServicesTab(content);
+                    break;
+                case 'gallery':
+                    loadGalleryTab(content);
+                    break;
+                case 'panel':
+                    loadPanelTab(content);
+                    break;
+                case 'contact':
+                    loadContactTab(content);
+                    break;
+                case 'settings':
+                    loadSettingsTab(content);
+                    break;
+            }
+        }
+
+        // Load Promosi Tab
+        function loadPromosiTab(container) {
+            const promos = loadPromos();
+            let html = '<div class="admin-section active"><h3>🔥 Pengurusan Promosi</h3>';
+            html += '<div id="promoAdminList"></div>';
+            html += '<div style="display: flex; gap: 10px; margin-bottom: 1rem; flex-wrap: wrap;"><button class="add-new-btn" onclick="addNewPromotion()" style="flex: 1; min-width: 200px;">➕ Tambah Promosi Baru</button></div>';
+            html += '<div class="admin-actions">';
+            html += '<button onclick="savePromos()" class="save-promo-btn">💾 Simpan Perubahan</button>';
+            html += '<button onclick="resetPromos()" class="reset-promo-btn">🔄 Reset ke Default</button>';
+            html += '</div></div>';
+            container.innerHTML = html;
+            
+            const list = document.getElementById('promoAdminList');
+            list.innerHTML = '';
+            promos.forEach((promo, index) => {
+                const card = document.createElement('div');
+                card.className = 'promo-edit-card';
+                card.id = `promo-card-${index}`;
+                card.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h4 style="margin: 0;">📋 Promosi ${index + 1}</h4>
+                        <button onclick="deletePromotion(${index})" class="delete-item-btn" style="padding: 8px 12px;">🗑️ Padam</button>
+                    </div>
+                    <div class="promo-form-row">
+                        <div class="promo-form-group">
+                            <label>Badge:</label>
+                            <select id="badge-${index}">
+                                <option value="PROMOSI" ${promo.badge === 'PROMOSI' ? 'selected' : ''}>PROMOSI</option>
+                                <option value="TERHAD" ${promo.badge === 'TERHAD' ? 'selected' : ''}>TERHAD</option>
+                                <option value="POPULAR" ${promo.badge === 'POPULAR' ? 'selected' : ''}>POPULAR</option>
+                                <option value="HOT" ${promo.badge === 'HOT' ? 'selected' : ''}>HOT</option>
+                            </select>
+                        </div>
+                        <div class="promo-form-group">
+                            <label>Gambar:</label>
+                            <input type="text" id="image-${index}" value="${promo.image}">
+                        </div>
+                    </div>
+                    <div class="promo-form-row">
+                        <div class="promo-form-group" style="grid-column: 1 / -1;">
+                            <label>Tajuk:</label>
+                            <input type="text" id="title-${index}" value="${promo.title}">
+                        </div>
+                    </div>
+                    <div class="promo-form-row">
+                        <div class="promo-form-group" style="grid-column: 1 / -1;">
+                            <label>Penerangan:</label>
+                            <textarea id="description-${index}" rows="2">${promo.description}</textarea>
+                        </div>
+                    </div>
+                    <div class="promo-form-row">
+                        <div class="promo-form-group">
+                            <label>Harga Asal (RM):</label>
+                            <input type="number" id="oldPrice-${index}" value="${promo.oldPrice}">
+                        </div>
+                        <div class="promo-form-group">
+                            <label>Harga Promosi (RM):</label>
+                            <input type="number" id="newPrice-${index}" value="${promo.newPrice}">
+                        </div>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        // Add New Promotion
+        function addNewPromotion() {
+            const promos = loadPromos();
+            promos.push({
+                badge: 'PROMOSI',
+                image: 'service-image.jpg',
+                title: 'Promosi Baru',
+                description: 'Penerangan promosi',
+                oldPrice: '0',
+                newPrice: '0'
+            });
+            localStorage.setItem('clinicPromos', JSON.stringify(promos));
+            loadPromosiTab(document.getElementById('adminTabContent'));
+            
+            setTimeout(() => {
+                const newPromoIndex = promos.length - 1;
+                const newPromoCard = document.getElementById(`promo-card-${newPromoIndex}`);
+                if (newPromoCard) {
+                    newPromoCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 100);
+            
+            showNotification('✅ Promosi baru telah ditambah!', 'success');
+        }
+
+        // Delete Promotion
+        function deletePromotion(index) {
+            if (confirm('Adakah anda pasti mahu padam promosi ini?')) {
+                const promos = loadPromos();
+                promos.splice(index, 1);
+                localStorage.setItem('clinicPromos', JSON.stringify(promos));
+                loadPromosiTab(document.getElementById('adminTabContent'));
+                showNotification('✅ Promosi telah dipadam!', 'success');
+            }
+        }
+
+        // Save promos
+        function savePromos() {
+            const promos = loadPromos();
+            const updated = promos.map((promo, index) => ({
+                badge: document.getElementById(`badge-${index}`).value,
+                image: document.getElementById(`image-${index}`).value,
+                title: document.getElementById(`title-${index}`).value,
+                description: document.getElementById(`description-${index}`).value,
+                oldPrice: document.getElementById(`oldPrice-${index}`).value,
+                newPrice: document.getElementById(`newPrice-${index}`).value
+            }));
+            
+            localStorage.setItem('clinicPromos', JSON.stringify(updated));
+            showNotification('✅ Promosi berjaya disimpan!', 'success');
+        }
+
+        // Reset to defaults
+        function resetPromos() {
+            if (confirm('Adakah anda pasti mahu reset ke promosi asal?')) {
+                localStorage.removeItem('clinicPromos');
+                loadPromosiTab(document.getElementById('adminTabContent'));
+                showNotification('🔄 Promosi telah di-reset!', 'success');
+            }
+        }
+
+        // Load Contact Tab
+        function loadContactTab(container) {
+            const data = loadSiteData();
+            let html = `<div class="admin-section active"><h3>📞 Pengurusan Maklumat Hubungi</h3>
+                <div class="promo-form-row">
+                    <div class="promo-form-group">
+                        <label>Telefon:</label>
+                        <input type="text" id="contact-phone" value="${data.contact.phone}">
+                    </div>
+                    <div class="promo-form-group">
+                        <label>Email:</label>
+                        <input type="email" id="contact-email" value="${data.contact.email}">
+                    </div>
+                </div>
+                <div class="promo-form-row">
+                    <div class="promo-form-group" style="grid-column: 1 / -1;">
+                        <label>Waktu Operasi:</label>
+                        <input type="text" id="contact-hours" value="${data.contact.hours}">
+                    </div>
+                </div>
+                <div class="promo-form-row">
+                    <div class="promo-form-group" style="grid-column: 1 / -1;">
+                        <label>Alamat:</label>
+                        <textarea id="contact-address" rows="3">${data.contact.address}</textarea>
+                    </div>
+                </div>
+                <div class="admin-actions">
+                    <button onclick="saveContactInfo()" class="save-promo-btn">💾 Simpan Perubahan</button>
+                </div>
+            </div>`;
+            container.innerHTML = html;
+        }
+
+        function saveContactInfo() {
+            const data = loadSiteData();
+            data.contact = {
+                phone: document.getElementById('contact-phone').value,
+                email: document.getElementById('contact-email').value,
+                hours: document.getElementById('contact-hours').value,
+                address: document.getElementById('contact-address').value
+            };
+            saveSiteData(data);
+            showNotification('✅ Maklumat hubungi berjaya disimpan!', 'success');
+        }
+
+        // Load Settings Tab
+        function loadSettingsTab(container) {
+            let html = `<div class="admin-section active"><h3>⚙️ Tetapan Admin</h3>
+                <div class="promo-edit-card">
+                    <h4>🔑 Tukar Kelayakan Login</h4>
+                    <p style="color: #666; margin-bottom: 1rem;">Tukar username dan password untuk keselamatan yang lebih baik.</p>
+                    <button onclick="changeAdminPassword()" class="save-promo-btn">🔑 Tukar Username & Password</button>
+                </div>
+                <div class="promo-edit-card">
+                    <h4>🔄 Reset Semua Data</h4>
+                    <p style="color: #666; margin-bottom: 1rem;">Reset semua perubahan ke tetapan asal.</p>
+                    <button onclick="resetAllData()" class="delete-item-btn">⚠️ Reset Semua ke Default</button>
+                </div>
+                <div class="promo-edit-card">
+                    <h4>📝 Nota Penting</h4>
+                    <p style="color: #666;">• Semua perubahan disimpan di browser<br>• Upload gambar baru ke folder website<br>• Gunakan nama fail tepat untuk gambar<br>• Refresh page selepas simpan untuk lihat perubahan</p>
+                </div>
+            </div>`;
+            container.innerHTML = html;
+        }
+
+        function resetAllData() {
+            if (confirm('AMARAN: Ini akan memadam SEMUA perubahan dan kembali ke tetapan asal. Adakah anda pasti?')) {
+                if (confirm('Adakah anda SANGAT pasti? Tindakan ini tidak boleh dibatalkan!')) {
+                    localStorage.removeItem('clinicSiteData');
+                    localStorage.removeItem('clinicPromos');
+                    showNotification('🔄 Semua data telah di-reset!', 'success');
+                    setTimeout(() => location.reload(), 2000);
+                }
+            }
+        }
+
+        // Load Services Tab
+        function loadServicesTab(container) {
+            const data = loadSiteData();
+            if (!data.services || data.services.length === 0) {
+                data.services = [];
+                saveSiteData(data);
+            }
+            
+            let html = '<div class="admin-section active"><h3>⚕️ Pengurusan Perkhidmatan</h3>';
+            html += '<button class="add-new-btn" onclick="addNewService()">➕ Tambah Perkhidmatan Baru</button>';
+            html += '<div class="item-list" id="servicesList"></div>';
+            html += '<div class="admin-actions"><button onclick="saveServices()" class="save-promo-btn">💾 Simpan Perubahan</button></div></div>';
+            container.innerHTML = html;
+            renderServicesList();
+        }
+
+        function renderServicesList() {
+            const data = loadSiteData();
+            const list = document.getElementById('servicesList');
+            if (!list) return;
+            list.innerHTML = '';
+            
+            data.services.forEach((service, index) => {
+                const card = document.createElement('div');
+                card.className = 'promo-edit-card';
+                card.innerHTML = `
+                    <h4>⚕️ Perkhidmatan ${index + 1}</h4>
+                    <div class="promo-form-row">
+                        <div class="promo-form-group">
+                            <label>Icon (Font Awesome):</label>
+                            <input type="text" id="service-icon-${index}" value="${service.icon || 'fas fa-stethoscope'}" placeholder="fas fa-stethoscope">
+                            <small style="color: #999;">Cari icon di: fontawesome.com/icons</small>
+                        </div>
+                        <div class="promo-form-group">
+                            <label>Tajuk:</label>
+                            <input type="text" id="service-title-${index}" value="${service.title || ''}">
+                        </div>
+                    </div>
+                    <div class="promo-form-row">
+                        <div class="promo-form-group" style="grid-column: 1 / -1;">
+                            <label>Penerangan:</label>
+                            <textarea id="service-desc-${index}" rows="2">${service.description || ''}</textarea>
+                        </div>
+                    </div>
+                    <button onclick="deleteService(${index})" class="delete-item-btn">🗑️ Padam</button>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function addNewService() {
+            const data = loadSiteData();
+            data.services.push({ icon: 'fas fa-stethoscope', title: 'Perkhidmatan Baru', description: 'Penerangan perkhidmatan' });
+            saveSiteData(data);
+            renderServicesList();
+        }
+
+        function deleteService(index) {
+            if (confirm('Padam perkhidmatan ini?')) {
+                const data = loadSiteData();
+                data.services.splice(index, 1);
+                saveSiteData(data);
+                renderServicesList();
+                showNotification('✅ Perkhidmatan telah dipadam!', 'success');
+            }
+        }
+
+        function saveServices() {
+            const data = loadSiteData();
+            data.services = data.services.map((service, index) => ({
+                icon: document.getElementById(`service-icon-${index}`)?.value || 'fas fa-stethoscope',
+                title: document.getElementById(`service-title-${index}`)?.value || '',
+                description: document.getElementById(`service-desc-${index}`)?.value || ''
+            }));
+            saveSiteData(data);
+            showNotification('✅ Perkhidmatan berjaya disimpan!', 'success');
+        }
+
+        // Load Detailed Services Tab
+        function loadDetailedServicesTab(container) {
+            const data = loadSiteData();
+            if (!data.detailedServices || data.detailedServices.length === 0) {
+                data.detailedServices = [];
+                saveSiteData(data);
+            }
+            
+            let html = '<div class="admin-section active"><h3>📋 Pengurusan Layanan Terperinci</h3>';
+            html += '<button class="add-new-btn" onclick="addNewDetailedService()">➕ Tambah Layanan Baru</button>';
+            html += '<div class="item-list" id="detailedServicesList"></div>';
+            html += '<div class="admin-actions"><button onclick="saveDetailedServices()" class="save-promo-btn">💾 Simpan Perubahan</button></div></div>';
+            container.innerHTML = html;
+            renderDetailedServicesList();
+        }
+
+        function renderDetailedServicesList() {
+            const data = loadSiteData();
+            const list = document.getElementById('detailedServicesList');
+            if (!list) return;
+            list.innerHTML = '';
+            
+            data.detailedServices.forEach((service, index) => {
+                const benefitsStr = service.benefits?.join('\n') || '';
+                const card = document.createElement('div');
+                card.className = 'promo-edit-card';
+                card.innerHTML = `
+                    <h4>📋 Layanan ${index + 1}</h4>
+                    <div class="promo-form-row">
+                        <div class="promo-form-group">
+                            <label>Gambar:</label>
+                            <input type="text" id="detailed-image-${index}" value="${service.image || ''}">
+                        </div>
+                        <div class="promo-form-group">
+                            <label>Tajuk:</label>
+                            <input type="text" id="detailed-title-${index}" value="${service.title || ''}">
+                        </div>
+                    </div>
+                    <div class="promo-form-row">
+                        <div class="promo-form-group" style="grid-column: 1 / -1;">
+                            <label>Manfaat (satu per baris):</label>
+                            <textarea id="detailed-benefits-${index}" rows="4" placeholder="Manfaat 1\nManfaat 2\nManfaat 3">${benefitsStr}</textarea>
+                        </div>
+                    </div>
+                    <button onclick="deleteDetailedService(${index})" class="delete-item-btn">🗑️ Padam</button>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function addNewDetailedService() {
+            const data = loadSiteData();
+            data.detailedServices.push({ 
+                image: 'service-new.jpg', 
+                title: 'Layanan Baru', 
+                benefits: ['Manfaat 1', 'Manfaat 2', 'Manfaat 3'] 
+            });
+            saveSiteData(data);
+            renderDetailedServicesList();
+        }
+
+        function deleteDetailedService(index) {
+            if (confirm('Padam layanan ini?')) {
+                const data = loadSiteData();
+                data.detailedServices.splice(index, 1);
+                saveSiteData(data);
+                renderDetailedServicesList();
+                showNotification('✅ Layanan telah dipadam!', 'success');
+            }
+        }
+
+        function saveDetailedServices() {
+            const data = loadSiteData();
+            data.detailedServices = data.detailedServices.map((service, index) => {
+                const benefitsText = document.getElementById(`detailed-benefits-${index}`)?.value || '';
+                const benefits = benefitsText.split('\n').filter(b => b.trim());
+                return {
+                    image: document.getElementById(`detailed-image-${index}`)?.value || '',
+                    title: document.getElementById(`detailed-title-${index}`)?.value || '',
+                    benefits: benefits
+                };
+            });
+            saveSiteData(data);
+            showNotification('✅ Layanan terperinci berjaya disimpan!', 'success');
+        }
+
+        // Load Gallery Tab
+        function loadGalleryTab(container) {
+            const data = loadSiteData();
+            if (!data.gallery || data.gallery.length === 0) {
+                data.gallery = [];
+                saveSiteData(data);
+            }
+            
+            let html = '<div class="admin-section active"><h3>🖼️ Pengurusan Galeri Klinik</h3>';
+            html += '<div class="promo-edit-card">';
+            html += '<h4>📤 Upload Gambar Baru</h4>';
+            html += '<div class="image-upload-zone" onclick="document.getElementById(\'galleryImageUpload\').click()" ondrop="handleGalleryDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">';
+            html += '<i class="fas fa-cloud-upload-alt"></i>';
+            html += '<p>Klik atau seret gambar ke sini</p>';
+            html += '<small>Format: JPG, PNG, GIF (Max 5MB)</small>';
+            html += '</div>';
+            html += '<input type="file" id="galleryImageUpload" accept="image/*" style="display:none;" onchange="handleGalleryUpload(event)">';
+            html += '<div id="galleryUploadPreview"></div>';
+            html += '<input type="text" id="newGalleryTitle" placeholder="Tajuk gambar..." style="width: 100%; padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px; margin-top: 1rem;">';
+            html += '<button onclick="saveUploadedGallery()" class="add-new-btn" style="margin-top: 1rem;">✅ Simpan Gambar</button>';
+            html += '</div>';
+            html += '<h4 style="margin-top: 2rem; color: #2d3748;">📋 Gambar Sedia Ada</h4>';
+            html += '<div class="item-list" id="galleryList"></div>';
+            html += '</div>';
+            container.innerHTML = html;
+            renderGalleryList();
+        }
+
+        let uploadedGalleryImage = null;
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const zone = e.target.closest('.image-upload-zone');
+            if (zone) zone.classList.add('dragover');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const zone = e.target.closest('.image-upload-zone');
+            if (zone) zone.classList.remove('dragover');
+        }
+
+        function handleGalleryDrop(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const zone = e.target.closest('.image-upload-zone');
+            if (zone) zone.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                processGalleryImage(files[0]);
+            }
+        }
+
+        function handleGalleryUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                processGalleryImage(file);
+            }
+        }
+
+        function processGalleryImage(file) {
+            if (!file.type.startsWith('image/')) {
+                alert('❌ Sila pilih fail gambar sahaja!');
+                return;
+            }
+            
+            if (file.size > 5 * 1024 * 1024) {
+                alert('❌ Saiz gambar terlalu besar! Maximum 5MB.');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedGalleryImage = {
+                    data: e.target.result,
+                    name: file.name
+                };
+                
+                const preview = document.getElementById('galleryUploadPreview');
+                preview.innerHTML = `
+                    <div class="image-preview" style="text-align: center;">
+                        <img src="${e.target.result}" style="max-width: 100%; max-height: 300px; border-radius: 8px; margin-top: 1rem;">
+                        <div class="uploaded-image-name">✅ ${file.name}</div>
+                    </div>
+                `;
+                
+                showNotification('✅ Gambar berjaya dimuat naik! Masukkan tajuk dan klik Simpan.', 'success');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function saveUploadedGallery() {
+            if (!uploadedGalleryImage) {
+                alert('❌ Sila muat naik gambar terlebih dahulu!');
+                return;
+            }
+            
+            const title = document.getElementById('newGalleryTitle').value.trim();
+            if (!title) {
+                alert('❌ Sila masukkan tajuk gambar!');
+                return;
+            }
+            
+            const data = loadSiteData();
+            const imageId = 'gallery-' + Date.now();
+            
+            localStorage.setItem(imageId, uploadedGalleryImage.data);
+            
+            data.gallery.push({
+                image: imageId,
+                title: title,
+                isUploaded: true
+            });
+            
+            saveSiteData(data);
+            showNotification('✅ Gambar berjaya disimpan!', 'success');
+            
+            uploadedGalleryImage = null;
+            document.getElementById('newGalleryTitle').value = '';
+            document.getElementById('galleryUploadPreview').innerHTML = '';
+            renderGalleryList();
+        }
+
+        function renderGalleryList() {
+            const data = loadSiteData();
+            const list = document.getElementById('galleryList');
+            if (!list) return;
+            list.innerHTML = '';
+            
+            data.gallery.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'promo-edit-card';
+                
+                const imgSrc = item.isUploaded ? localStorage.getItem(item.image) : item.image;
+                
+                card.innerHTML = `
+                    <div style="display: flex; gap: 15px; align-items: flex-start;">
+                        <img src="${imgSrc}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; border: 2px solid #e2e8f0;">
+                        <div style="flex: 1;">
+                            <h4 style="margin: 0 0 10px 0;">🖼️ ${item.title}</h4>
+                            <div class="promo-form-group">
+                                <label>Tajuk:</label>
+                                <input type="text" id="gallery-title-${index}" value="${item.title}">
+                            </div>
+                            <button onclick="deleteGallery(${index})" class="delete-item-btn" style="margin-top: 10px;">🗑️ Padam</button>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function deleteGallery(index) {
+            if (confirm('Padam gambar ini?')) {
+                const data = loadSiteData();
+                const item = data.gallery[index];
+                
+                if (item.isUploaded) {
+                    localStorage.removeItem(item.image);
+                }
+                
+                data.gallery.splice(index, 1);
+                saveSiteData(data);
+                renderGalleryList();
+                showNotification('✅ Gambar telah dipadam!', 'success');
+            }
+        }
+
+        // Load Panel Tab
+        function loadPanelTab(container) {
+            const data = loadSiteData();
+            if (!data.insurancePanel || data.insurancePanel.length === 0) {
+                data.insurancePanel = [];
+                saveSiteData(data);
+            }
+            
+            let html = '<div class="admin-section active"><h3>🏥 Pengurusan Panel Insurans</h3>';
+            html += '<div class="promo-edit-card">';
+            html += '<h4>📤 Upload Logo Panel Baru</h4>';
+            html += '<div class="image-upload-zone" onclick="document.getElementById(\'panelImageUpload\').click()" ondrop="handlePanelDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">';
+            html += '<i class="fas fa-cloud-upload-alt"></i>';
+            html += '<p>Klik atau seret logo panel ke sini</p>';
+            html += '<small>Format: PNG, JPG (Max 2MB)</small>';
+            html += '</div>';
+            html += '<input type="file" id="panelImageUpload" accept="image/*" style="display:none;" onchange="handlePanelUpload(event)">';
+            html += '<div id="panelUploadPreview"></div>';
+            html += '<input type="text" id="newPanelName" placeholder="Nama panel insurans..." style="width: 100%; padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px; margin-top: 1rem;">';
+            html += '<button onclick="saveUploadedPanel()" class="add-new-btn" style="margin-top: 1rem;">✅ Simpan Panel</button>';
+            html += '</div>';
+            html += '<h4 style="margin-top: 2rem; color: #2d3748;">📋 Panel Sedia Ada</h4>';
+            html += '<div class="item-list" id="panelList"></div>';
+            html += '</div>';
+            container.innerHTML = html;
+            renderPanelList();
+        }
+
+        let uploadedPanelImage = null;
+
+        function handlePanelDrop(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const zone = e.target.closest('.image-upload-zone');
+            if (zone) zone.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                processPanelImage(files[0]);
+            }
+        }
+
+        function handlePanelUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                processPanelImage(file);
+            }
+        }
+
+        function processPanelImage(file) {
+            if (!file.type.startsWith('image/')) {
+                alert('❌ Sila pilih fail gambar sahaja!');
+                return;
+            }
+            
+            if (file.size > 2 * 1024 * 1024) {
+                alert('❌ Saiz logo terlalu besar! Maximum 2MB.');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedPanelImage = {
+                    data: e.target.result,
+                    name: file.name
+                };
+                
+                const preview = document.getElementById('panelUploadPreview');
+                preview.innerHTML = `
+                    <div class="image-preview" style="text-align: center;">
+                        <img src="${e.target.result}" style="max-width: 200px; max-height: 150px; object-fit: contain; border-radius: 8px; background: white; padding: 10px; border: 2px solid #e2e8f0; margin-top: 1rem;">
+                        <div class="uploaded-image-name">✅ ${file.name}</div>
+                    </div>
+                `;
+                
+                showNotification('✅ Logo berjaya dimuat naik! Masukkan nama panel dan klik Simpan.', 'success');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function saveUploadedPanel() {
+            if (!uploadedPanelImage) {
+                alert('❌ Sila muat naik logo terlebih dahulu!');
+                return;
+            }
+            
+            const name = document.getElementById('newPanelName').value.trim();
+            if (!name) {
+                alert('❌ Sila masukkan nama panel!');
+                return;
+            }
+            
+            const data = loadSiteData();
+            const imageId = 'panel-' + Date.now();
+            
+            localStorage.setItem(imageId, uploadedPanelImage.data);
+            
+            data.insurancePanel.push({
+                image: imageId,
+                name: name,
+                isUploaded: true
+            });
+            
+            saveSiteData(data);
+            showNotification('✅ Panel insurans berjaya disimpan!', 'success');
+            
+            uploadedPanelImage = null;
+            document.getElementById('newPanelName').value = '';
+            document.getElementById('panelUploadPreview').innerHTML = '';
+            renderPanelList();
+        }
+
+        function renderPanelList() {
+            const data = loadSiteData();
+            const list = document.getElementById('panelList');
+            if (!list) return;
+            list.innerHTML = '';
+            
+            data.insurancePanel.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'promo-edit-card';
+                
+                let imageSrc = item.image;
+                if (item.isUploaded) {
+                    imageSrc = localStorage.getItem(item.image) || item.image;
+                }
+                
+                card.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="flex-shrink: 0;">
+                            <img src="${imageSrc}" style="width: 100px; height: 70px; object-fit: contain; border-radius: 8px; background: white; padding: 5px; border: 2px solid #e2e8f0;">
+                        </div>
+                        <div style="flex-grow: 1;">
+                            <h4>🏥 ${item.name}</h4>
+                            <div class="promo-form-group">
+                                <label>Nama Panel:</label>
+                                <input type="text" id="panel-name-${index}" value="${item.name}">
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                        <button onclick="savePanel()" class="save-promo-btn" style="flex: 1;">💾 Simpan</button>
+                        <button onclick="deletePanel(${index})" class="delete-item-btn" style="flex: 1;">🗑️ Padam</button>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function deletePanel(index) {
+            if (confirm('Padam panel ini?')) {
+                const data = loadSiteData();
+                const item = data.insurancePanel[index];
+                
+                if (item.isUploaded) {
+                    localStorage.removeItem(item.image);
+                }
+                
+                data.insurancePanel.splice(index, 1);
+                saveSiteData(data);
+                renderPanelList();
+                showNotification('✅ Panel telah dipadam!', 'success');
+            }
+        }
+
+        function savePanel() {
+            const data = loadSiteData();
+            data.insurancePanel = data.insurancePanel.map((item, index) => ({
+                image: item.image,
+                name: document.getElementById(`panel-name-${index}`)?.value || item.name,
+                isUploaded: item.isUploaded || false
+            }));
+            saveSiteData(data);
+            showNotification('✅ Nama panel berjaya disimpan!', 'success');
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (isAdminLoggedIn) {
+                openPromoAdmin();
+            }
+        });
+    </script>
+</body>
+</html>
